@@ -73,40 +73,15 @@ func TestCache_Drop(t *testing.T) {
 	}
 }
 
-// // TestCache_SetWithTimeout tests the SetWithTimeout function to ensure items are set with a custom timeout
-// func TestCache_SetWithTimeout(t *testing.T) {
-// 	cache := newRW[string](cacheOpts{timeout: 1 * time.Millisecond, cleanupFreq: 1 * time.Second})
 
-// 	// Set items with custom timeouts
-// 	cache.SetWithTimeout("key1", "value1", 10*time.Millisecond)
-// 	cache.SetWithTimeout("key2", "value2", 1*time.Second)
-
-// 	// Wait for the first item to expire
-// 	time.Sleep(15 * time.Millisecond)
-
-// 	// Check expiration of the first item
-// 	if _, err := cache.Get("key1"); err == nil {
-// 		t.Error("Expected error for expired key 'key1', got nil")
-// 	}
-
-// 	// The second item should not have expired yet
-// 	if val, err := cache.Get("key2"); err != nil || val != "value2" {
-// 		t.Errorf("Expected 'value2', got %v, error: %v", val, err)
-// 	}
-// }
-
-// TestCache_SchedCleanup tests the periodic cleanup functionality
 func TestCache_SchedCleanup(t *testing.T) {
 	cache := newRW[uint8](cacheOpts{timeout: 1 * time.Millisecond, cleanupFreq: 10 * time.Millisecond})
 
-	// Set items in the cache with a short timeout
 	cache.Put(1, "value1")
 	cache.Put(2, "value2")
 
-	// Give some time for the cleanup to happen
 	time.Sleep(20 * time.Millisecond)
 
-	// Test that expired items are cleaned up
 	if _, err := cache.Get(1); err == nil {
 		t.Error("Expected error for expired key '1', got nil")
 	}
